@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio - Luca Matheus da Costa Gonçalves</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b',
+                        primary: '#3b82f6',
+                        accent: '#10b981',
+                        textMain: '#f8fafc',
+                        textMuted: '#94a3b8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- React & ReactDOM (CDN) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel para compilar JSX no navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- COMPONENTE: NAVBAR ---
+        const Navbar = () => {
+            const [isOpen, setIsOpen] = useState(false);
+
+            return (
+                <nav className="fixed w-full bg-darkBg/90 backdrop-blur-md z-50 border-b border-gray-800" aria-label="Navegação Principal">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between h-16">
+                            <div className="flex-shrink-0 font-bold text-xl text-primary flex items-center gap-2">
+                                <i className="ph ph-terminal-window text-2xl"></i> Portfólio.
+                            </div>
+                            <div className="hidden lg:block">
+                                <div className="ml-10 flex items-baseline space-x-4">
+                                    <a href="#sobre" className="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" tabIndex="0">Sobre</a>
+                                    <a href="#experiencia" className="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" tabIndex="0">Experiência</a>
+                                    <a href="#projetos" className="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" tabIndex="0">Projetos & Software</a>
+                                    <a href="#certificacoes" className="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" tabIndex="0">Certificações</a>
+                                    <a href="#dashboard" className="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors" tabIndex="0">Indicadores</a>
+                                </div>
+                            </div>
+                            <div className="lg:hidden">
+                                <button onClick={() => setIsOpen(!isOpen)} className="text-gray-300 hover:text-white p-2" aria-label="Abrir menu" aria-expanded={isOpen}>
+                                    <i className={`fa-solid ${isOpen ? 'fa-xmark' : 'fa-bars'} text-2xl`}></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {isOpen && (
+                        <div className="lg:hidden bg-darkCard border-b border-gray-800">
+                            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                                <a href="#sobre" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>Sobre</a>
+                                <a href="#experiencia" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>Experiência</a>
+                                <a href="#projetos" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>Projetos & Software</a>
+                                <a href="#certificacoes" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>Certificações</a>
+                                <a href="#dashboard" className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>Indicadores</a>
+                            </div>
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        // --- COMPONENTE: HERO & FOTO ---
+        const Hero = () => {
+            const [profileImage, setProfileImage] = useState("https://source.unsplash.com/random/400x400/?professional,portrait");
+
+            const handleImageUpload = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setProfileImage(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            return (
+                <section id="sobre" className="pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
+                    <div className="flex-1" data-aos="fade-right">
+                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                            Olá, eu sou <span className="text-primary">Luca Matheus da Costa Gonçalves</span>
+                        </h1>
+                        <h2 className="text-2xl text-accent mb-6 font-semibold flex items-center gap-2">
+                            <i className="ph ph-chart-line-up"></i> Nutrição Clínica, Gestão de Dados e Tecnologia
+                        </h2>
+                        <p className="text-lg text-textMuted mb-8 leading-relaxed text-justify">
+                            Profissional híbrido com sólida experiência em Unidades de Alimentação e Nutrição (UAN) hospitalares e Nutrição Clínica. Atuação focada no controle de qualidade, auditoria operacional, gestão de indicadores de desempenho (SIGQUALI) e transformação digital em saúde. Técnico em Nutrição, graduando em Nutrição (7º período) e Engenharia de Software (1º período).
+                        </p>
+                        <div className="flex flex-wrap gap-4">
+                            <a href="#contato" className="bg-primary hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2" tabIndex="0">
+                                <i className="fa-solid fa-paper-plane"></i> Contato
+                            </a>
+                            <a href="https://linkedin.com/in/luca-matheus-da-goncalves" target="_blank" rel="noreferrer" className="bg-darkCard hover:bg-gray-700 border border-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2" tabIndex="0">
+                                <i className="fa-brands fa-linkedin"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center" data-aos="fade-left">
+                        <div className="relative group w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-primary shadow-[0_0_30px_rgba(59,130,246,0.3)] mb-4">
+                            <img src={profileImage} alt="Foto Profissional de Luca Matheus" className="w-full h-full object-cover" />
+                            <label htmlFor="photo-upload" className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" aria-label="Alterar foto profissional" tabIndex="0">
+                                <span className="text-white font-medium flex flex-col items-center gap-2">
+                                    <i className="fa-solid fa-camera text-2xl"></i> Alterar Foto
+                                </span>
+                            </label>
+                            <input id="photo-upload" type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                        </div>
+                        <p className="text-sm text-textMuted text-center"><i className="ph ph-map-pin"></i> Brasília - DF | 26 anos</p>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: HABILIDADES TÉCNICAS ---
+        const Skills = () => {
+            const skills = [
+                { name: "Power BI & Excel", icon: "ph-chart-bar" },
+                { name: "Auditoria e Custos", icon: "ph-magnifying-glass" },
+                { name: "Bizagi BPMN", icon: "ph-git-merge" },
+                { name: "SigQuali / MV Soul", icon: "ph-hospital" },
+                { name: "KPIs / PDCA / Ishikawa", icon: "ph-target" },
+                { name: "IA Aplicada / NLP", icon: "ph-brain" },
+                { name: "Nutrição Clínica", icon: "ph-heartbeat" },
+                { name: "Inteligência Sensorial", icon: "ph-fork-knife" }
+            ];
+
+            return (
+                <section className="bg-darkCard py-16" id="habilidades">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h3 className="text-3xl font-bold mb-10 text-center border-b border-gray-700 pb-4" data-aos="fade-up">Competências Técnicas</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            {skills.map((skill, index) => (
+                                <div key={index} className="bg-darkBg p-6 rounded-xl border border-gray-700 flex flex-col items-center justify-center text-center hover:border-primary transition-colors hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]" data-aos="zoom-in" data-aos-delay={index * 50}>
+                                    <i className={`ph ${skill.icon} text-4xl text-primary mb-3`} aria-hidden="true"></i>
+                                    <span className="font-medium">{skill.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: EXPERIÊNCIA PROFISSIONAL ---
+        const Experience = () => {
+            return (
+                <section id="experiencia" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h3 className="text-3xl font-bold mb-10 text-center border-b border-gray-700 pb-4" data-aos="fade-up">Experiência Profissional</h3>
+                    <div className="space-y-12">
+                        
+                        <div className="relative pl-8 border-l-2 border-primary" data-aos="fade-up">
+                            <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px] top-1"></div>
+                            <h4 className="text-xl font-bold">Assistente Administrativo I - Nutrição Hospitalar</h4>
+                            <h5 className="text-lg text-accent mb-2">Hospital Daher Lago Sul | Outubro de 2021 - Atual</h5>
+                            <ul className="list-disc pl-5 text-textMuted space-y-2">
+                                <li><strong>Gestão de Qualidade e Indicadores:</strong> Monitoramento e interpretação de indicadores de performance através do sistema SIGQUALI.</li>
+                                <li><strong>Auditoria e Custos:</strong> Realização de auditorias operacionais e avaliação de custos de alimentos para otimização de recursos da unidade.</li>
+                                <li><strong>Gestão de Fornecedores:</strong> Controle de qualidade no recebimento e garantia do padrão de rendimento dos insumos.</li>
+                                <li>Centralização de pedidos de insumos perecíveis, não perecíveis e lactário; lançamentos no MV Soul e encaminhamento financeiro.</li>
+                                <li>Mapeamento de processos com Bizagi BPMN e análises críticas mensais (PDCA + Ishikawa).</li>
+                            </ul>
+                        </div>
+
+                        <div className="relative pl-8 border-l-2 border-blue-400" data-aos="fade-up">
+                            <div className="absolute w-4 h-4 bg-blue-400 rounded-full -left-[9px] top-1"></div>
+                            <h4 className="text-xl font-bold">Estágio Supervisionado em Nutrição Clínica</h4>
+                            <h5 className="text-lg text-blue-300 mb-2">Carga Horária: 214 horas</h5>
+                            <ul className="list-disc pl-5 text-textMuted space-y-2">
+                                <li>Foco em atendimento hospitalar à beira do leito.</li>
+                                <li>Análise de exames bioquímicos e interações de micronutrientes.</li>
+                                <li>Elaboração e prescrição dietética e suplementação clínica.</li>
+                            </ul>
+                        </div>
+                        
+                        <div className="relative pl-8 border-l-2 border-gray-700" data-aos="fade-up">
+                            <div className="absolute w-4 h-4 bg-gray-600 rounded-full -left-[9px] top-1"></div>
+                            <h4 className="text-xl font-bold text-gray-300">Auxiliar Administrativo</h4>
+                            <h5 className="text-lg text-gray-400 mb-2">Hospital Brasilia | Março de 2020 a Outubro de 2021</h5>
+                            <p className="text-textMuted">
+                                Atuação com serviços financeiros, gerenciamento de inventários, contas a pagar e a receber, processo de faturamento e controle de estoque. Utilização dos sistemas MV/PEP/WEKNOW e SIGQUALI.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: PROJETOS DE SOFTWARE E SOLUÇÕES ---
+        const Projects = () => {
+            const portfolioProjects = [
+                {
+                    title: "Calculadora para Nutrição Clínica",
+                    desc: "Central de inteligência clínica e reatividade. Automatiza cálculos de alvos nutricionais, prescrição de sonda (TNE), balanço de água livre e gera minutas automáticas de evolução clínica prontas para o prontuário.",
+                    icon: "fa-solid fa-calculator",
+                    color: "text-blue-500",
+                    border: "border-blue-500/30",
+                    bg: "bg-blue-500/10"
+                },
+                {
+                    title: "NutriSmart - Gerador de Cardápio",
+                    desc: "Gestão inteligente de cardápios semanais com IA Nutricionista integrada. Avalia automaticamente regras de alternância de carnes, aspecto sensorial (100% de precisão) e possui recurso de correção automática de erros.",
+                    icon: "fa-solid fa-calendar-check",
+                    color: "text-green-500",
+                    border: "border-green-500/30",
+                    bg: "bg-green-500/10"
+                },
+                {
+                    title: "UAN Hospitalar - Sistema de Gestão",
+                    desc: "Plataforma integrada para nutricionistas, produção, compras e gestores. Engloba fichas técnicas com cálculos automáticos, controle de estoque, adequação RDC 216/2004 ANVISA e dashboards gerenciais.",
+                    icon: "fa-solid fa-hospital",
+                    color: "text-indigo-500",
+                    border: "border-indigo-500/30",
+                    bg: "bg-indigo-500/10"
+                },
+                {
+                    title: "Monitor Bioquímico (UTI/Sabin)",
+                    desc: "Acompanhamento longitudinal de painéis bioquímicos com janela de até 30 dias. Inclui curvas de tendência com sinalização por semáforo clínico e geração de texto de evolução consolidado.",
+                    icon: "fa-solid fa-flask-vial",
+                    color: "text-purple-500",
+                    border: "border-purple-500/30",
+                    bg: "bg-purple-500/10"
+                },
+                {
+                    title: "Chumlea Calc",
+                    desc: "Estimativa antropométrica à beira do leito para pacientes restritos/UTI. Realiza cálculo matemático instantâneo e triagem integrada gerando laudo padronizado de diagnóstico nutricional.",
+                    icon: "fa-solid fa-bed-pulse",
+                    color: "text-yellow-500",
+                    border: "border-yellow-500/30",
+                    bg: "bg-yellow-500/10"
+                }
+            ];
+
+            return (
+                <section id="projetos" className="bg-darkCard py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        
+                        <h3 className="text-4xl font-bold mb-4 text-center text-primary" data-aos="fade-up">Projetos & Soluções Desenvolvidas</h3>
+                        <p className="text-center text-textMuted mb-12 max-w-3xl mx-auto" data-aos="fade-up">
+                            Demonstração prática da intersecção entre Nutrição Clínica, Processos de Gestão e Engenharia de Software.
+                        </p>
+
+                        {/* SESSÃO DE SOFTWARE (IMAGENS) */}
+                        <div className="mb-16">
+                            <h4 className="text-2xl font-bold mb-8 border-b border-gray-700 pb-2 inline-block flex items-center gap-2" data-aos="fade-up">
+                                <i className="ph ph-code"></i> Portfólio de Software & Ferramentas
+                            </h4>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {portfolioProjects.map((project, index) => (
+                                    <div key={index} className={`p-6 rounded-xl border ${project.border} bg-darkBg hover:${project.bg} transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg`} data-aos="fade-up" data-aos-delay={index * 100}>
+                                        <div className={`${project.color} text-4xl mb-4`}><i className={project.icon}></i></div>
+                                        <h4 className="text-xl font-bold mb-3">{project.title}</h4>
+                                        <p className="text-sm text-textMuted leading-relaxed">{project.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* SESSÃO DE PROJETOS DE GESTÃO (PDF ORIGINAL) */}
+                        <div className="mb-16">
+                            <h4 className="text-2xl font-bold mb-8 border-b border-gray-700 pb-2 inline-block flex items-center gap-2" data-aos="fade-up">
+                                <i className="ph ph-kanban"></i> Projetos de Gestão e Processos
+                            </h4>
+                            <div className="grid md:grid-cols-3 gap-8">
+                                <div className="bg-darkBg p-6 rounded-xl border border-gray-700" data-aos="flip-left">
+                                    <div className="text-primary text-3xl mb-4"><i className="fa-solid fa-chart-pie"></i></div>
+                                    <h4 className="text-xl font-bold mb-3">Projeto 01 - Sistema de Indicadores</h4>
+                                    <p className="text-sm text-textMuted">Criação de análises críticas estruturadas para custos, comensais, perdas e satisfação, conectadas ao plano de ação institucional.</p>
+                                </div>
+                                <div className="bg-darkBg p-6 rounded-xl border border-gray-700" data-aos="flip-left" data-aos-delay="100">
+                                    <div className="text-accent text-3xl mb-4"><i className="fa-solid fa-diagram-project"></i></div>
+                                    <h4 className="text-xl font-bold mb-3">Projeto 02 - Mapeamento Operacional</h4>
+                                    <p className="text-sm text-textMuted">Modelagem BPMN dos fluxos de pedidos, recebimento fiscal e estoque, com identificação de gargalos e propostas de melhoria.</p>
+                                </div>
+                                <div className="bg-darkBg p-6 rounded-xl border border-gray-700" data-aos="flip-left" data-aos-delay="200">
+                                    <div className="text-yellow-500 text-3xl mb-4"><i className="fa-solid fa-boxes-stacked"></i></div>
+                                    <h4 className="text-xl font-bold mb-3">Projeto 03 - Governança de Compras</h4>
+                                    <p className="text-sm text-textMuted">Padronização de solicitações, recebimento e lançamentos no MV Soul, com acompanhamento por indicadores operacionais.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SESSÃO DE CASES DE IMPACTO (PDF ORIGINAL) */}
+                        <div>
+                            <h4 className="text-2xl font-bold text-center mb-8 border-b border-gray-700 pb-2 inline-block mx-auto flex items-center justify-center gap-2" data-aos="fade-up">
+                                <i className="ph ph-lightning"></i> Cases de Impacto (Metodologia SIGQUALI)
+                            </h4>
+                            <div className="space-y-6 max-w-4xl mx-auto">
+                                <div className="bg-gradient-to-r from-darkBg to-gray-800 p-8 rounded-2xl border border-gray-700 shadow-lg" data-aos="fade-up">
+                                    <h5 className="text-xl font-bold text-primary mb-2">Case 1 - Controle de custos em alimentação</h5>
+                                    <ul className="space-y-2 text-textMuted">
+                                        <li><strong className="text-white">Problema:</strong> Aumento de custos em períodos de alta demanda.</li>
+                                        <li><strong className="text-white">Ação:</strong> Análise crítica mensal + ajustes de planejamento.</li>
+                                        <li><strong className="text-accent">Resultado:</strong> Manutenção da qualidade com controle financeiro.</li>
+                                    </ul>
+                                </div>
+
+                                <div className="bg-gradient-to-r from-darkBg to-gray-800 p-8 rounded-2xl border border-gray-700 shadow-lg" data-aos="fade-up">
+                                    <h5 className="text-xl font-bold text-primary mb-2">Case 2 - Redução de perdas de estoque</h5>
+                                    <ul className="space-y-2 text-textMuted">
+                                        <li><strong className="text-white">Problema:</strong> Perdas por perecibilidade (FLV).</li>
+                                        <li><strong className="text-white">Ação:</strong> Solicitação diária e controle de validade.</li>
+                                        <li><strong className="text-accent">Resultado:</strong> Perdas mínimas e processo sustentável.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: EDUCAÇÃO CONTINUADA E CERTIFICAÇÕES (NOVO) ---
+        const Certifications = () => {
+            const certsTech = [
+                { name: "Engenharia de Prompt", hours: "30h", org: "Faculdade Gran" },
+                { name: "Inteligência Artificial na Prática", hours: "30h", org: "Faculdade Gran" },
+                { name: "Soluções Preditivas: Dados com R e Python", hours: "25h", org: "Enap" },
+                { name: "Estatística para Análise de Dados", hours: "25h", org: "Enap" },
+                { name: "Processamento de Linguagem Natural (PLN)", hours: "25h", org: "Enap" },
+                { name: "Cibersegurança Ofensiva e Prevenção", hours: "30h", org: "Faculdade Gran" },
+                { name: "Testes de Software na Prática", hours: "30h", org: "Faculdade Gran" },
+                { name: "Computação em Nuvem e Infraestrutura", hours: "30h", org: "Faculdade Gran" },
+                { name: "Preparando Dados - Power BI", hours: "7h", org: "Enap" }
+            ];
+
+            const certsManage = [
+                { name: "Análise e Melhoria de Processos", hours: "20h", org: "Enap" },
+                { name: "Gestão de Crises no Setor Público", hours: "30h", org: "Enap" },
+                { name: "Elaboração e Monitoramento do PDTIC", hours: "25h", org: "Enap" },
+                { name: "Design Thinking", hours: "12h", org: "Sebrae" },
+                { name: "Indicadores Estratégicos", hours: "12h", org: "Sebrae" },
+                { name: "Just in Time & Controle de Estoque", hours: "13h", org: "Sebrae" },
+                { name: "Mapeamento de Processos de A a Z", hours: "4h", org: "Sebrae" },
+                { name: "Gestão do Conhecimento: Teoria e Prática", hours: "20h", org: "Enap" },
+                { name: "PDCA / Importância da Gestão", hours: "4h30", org: "Sistema OCB" }
+            ];
+
+            const certsHealth = [
+                { name: "Extensão em Nutrição Clínica e Terapia Nutricional", hours: "100h", org: "Faculdade Iguaçu" },
+                { name: "Extensão em Nutrição Esportiva e Treinamento", hours: "100h", org: "Faculdade Iguaçu" },
+                { name: "Segurança do Paciente e Qualidade em Saúde", hours: "100h", org: "Enap" },
+                { name: "Boas Práticas nos Serviços de Alimentação", hours: "20h", org: "Sebrae" },
+                { name: "Ação Educativa e Prevenção de Doenças", hours: "20h", org: "IFRS" },
+                { name: "Responsabilidade na Saúde Pública", hours: "2h", org: "Sebrae" },
+                { name: "A Inteligência Sensorial dos Alimentos", hours: "3h", org: "SENAI" }
+            ];
+
+            const certsLead = [
+                { name: "Comunicação Assertiva, Oratória e Retórica", hours: "50h", org: "Enap" },
+                { name: "Liderança e Gestão de Equipes", hours: "30h", org: "Enap" },
+                { name: "Estratégias de Produtividade e Priorização", hours: "25h", org: "Enap" },
+                { name: "Gestão de Conflitos", hours: "20h", org: "Enap" },
+                { name: "Inteligência Emocional", hours: "15h", org: "Sebrae" },
+                { name: "Comunicação Não Violenta", hours: "32h", org: "Enap / Sebrae" },
+                { name: "Diversidade e Inclusão no Ambiente", hours: "20h", org: "Enap" },
+                { name: "Gestão de Pessoas e Equipes Híbridas", hours: "40h", org: "Enap" }
+            ];
+
+            return (
+                <section id="certificacoes" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-12">
+                        <h3 className="text-3xl font-bold mb-4 text-white" data-aos="fade-up">Educação Continuada & Certificações</h3>
+                        <p className="text-textMuted max-w-3xl mx-auto" data-aos="fade-up">
+                            Constante atualização profissional com <strong className="text-primary">mais de 1.000 horas certificadas</strong> nas áreas de Tecnologia, Gestão, Nutrição Clínica e Liderança, chanceladas por instituições de excelência.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        
+                        {/* Box Tech */}
+                        <div className="bg-darkCard border border-gray-700 rounded-xl p-6 shadow-lg" data-aos="fade-right">
+                            <h4 className="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2 border-b border-gray-700 pb-2">
+                                <i className="ph ph-cpu"></i> Tecnologia & Dados
+                            </h4>
+                            <ul className="space-y-4">
+                                {certsTech.map((cert, i) => (
+                                    <li key={i} className="flex justify-between items-start text-sm">
+                                        <div>
+                                            <p className="font-semibold text-gray-200">{cert.name}</p>
+                                            <p className="text-xs text-gray-500">{cert.org}</p>
+                                        </div>
+                                        <span className="bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded-md font-mono whitespace-nowrap">{cert.hours}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Box Health */}
+                        <div className="bg-darkCard border border-gray-700 rounded-xl p-6 shadow-lg" data-aos="fade-left">
+                            <h4 className="text-xl font-bold text-green-400 mb-6 flex items-center gap-2 border-b border-gray-700 pb-2">
+                                <i className="ph ph-heartbeat"></i> Nutrição Clínica & Saúde
+                            </h4>
+                            <ul className="space-y-4">
+                                {certsHealth.map((cert, i) => (
+                                    <li key={i} className="flex justify-between items-start text-sm">
+                                        <div>
+                                            <p className="font-semibold text-gray-200">{cert.name}</p>
+                                            <p className="text-xs text-gray-500">{cert.org}</p>
+                                        </div>
+                                        <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-md font-mono whitespace-nowrap">{cert.hours}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Box Management */}
+                        <div className="bg-darkCard border border-gray-700 rounded-xl p-6 shadow-lg" data-aos="fade-right">
+                            <h4 className="text-xl font-bold text-yellow-500 mb-6 flex items-center gap-2 border-b border-gray-700 pb-2">
+                                <i className="ph ph-kanban"></i> Gestão de Processos
+                            </h4>
+                            <ul className="space-y-4">
+                                {certsManage.map((cert, i) => (
+                                    <li key={i} className="flex justify-between items-start text-sm">
+                                        <div>
+                                            <p className="font-semibold text-gray-200">{cert.name}</p>
+                                            <p className="text-xs text-gray-500">{cert.org}</p>
+                                        </div>
+                                        <span className="bg-yellow-500/20 text-yellow-500 text-xs px-2 py-1 rounded-md font-mono whitespace-nowrap">{cert.hours}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Box Soft Skills */}
+                        <div className="bg-darkCard border border-gray-700 rounded-xl p-6 shadow-lg" data-aos="fade-left">
+                            <h4 className="text-xl font-bold text-purple-400 mb-6 flex items-center gap-2 border-b border-gray-700 pb-2">
+                                <i className="ph ph-users-three"></i> Liderança & Soft Skills
+                            </h4>
+                            <ul className="space-y-4">
+                                {certsLead.map((cert, i) => (
+                                    <li key={i} className="flex justify-between items-start text-sm">
+                                        <div>
+                                            <p className="font-semibold text-gray-200">{cert.name}</p>
+                                            <p className="text-xs text-gray-500">{cert.org}</p>
+                                        </div>
+                                        <span className="bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded-md font-mono whitespace-nowrap">{cert.hours}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: DASHBOARD / CHART.JS ---
+        const Dashboard = () => {
+            const chartRef = useRef(null);
+
+            useEffect(() => {
+                if (chartRef.current) {
+                    const ctx = chartRef.current.getContext('2d');
+                    
+                    if (window.myChartInstance) {
+                        window.myChartInstance.destroy();
+                    }
+
+                    window.myChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                            datasets: [
+                                {
+                                    label: 'Eficiência de Estoque (SND)',
+                                    data: [82, 85, 88, 92, 95, 98],
+                                    borderColor: 'rgb(16, 185, 129)',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Redução de Custos (%)',
+                                    data: [5, 8, 12, 15, 18, 22],
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#f8fafc', font: { family: "'Segoe UI', sans-serif" } }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { color: '#94a3b8' },
+                                    grid: { color: '#334155' }
+                                },
+                                x: {
+                                    ticks: { color: '#94a3b8' },
+                                    grid: { color: '#334155' }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return () => {
+                    if (window.myChartInstance) {
+                        window.myChartInstance.destroy();
+                    }
+                };
+            }, []);
+
+            return (
+                <section id="dashboard" className="bg-darkCard py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h3 className="text-3xl font-bold mb-4 text-center" data-aos="fade-up">Gestão Baseada em Dados</h3>
+                        <p className="text-center text-textMuted mb-10 max-w-2xl mx-auto" data-aos="fade-up">
+                            Monitoramento contínuo de custos, avaliação de desempenho financeiro setorial e análise crítica estruturada para melhoria contínua.
+                        </p>
+                        <div className="bg-darkBg p-6 rounded-2xl border border-gray-700 h-96 w-full shadow-xl" data-aos="zoom-in">
+                            <canvas ref={chartRef}></canvas>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // --- COMPONENTE: FOOTER & CONTATO ---
+        const Footer = () => {
+            return (
+                <footer id="contato" className="bg-[#020617] py-12 border-t border-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="text-center md:text-left">
+                            <h3 className="text-2xl font-bold text-primary mb-2">Luca Matheus da Costa Gonçalves</h3>
+                            <p className="text-textMuted"><i className="fa-solid fa-location-dot mr-2"></i>Brasília - DF</p>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4 text-center">
+                            <a href="mailto:luucamaath@gmail.com" className="text-textMuted hover:text-white transition-colors" aria-label="Enviar Email">
+                                <i className="fa-solid fa-envelope mr-2"></i>luucamaath@gmail.com
+                            </a>
+                            <a href="tel:+5561993676249" className="text-textMuted hover:text-white transition-colors" aria-label="Ligar via telefone">
+                                <i className="fa-solid fa-phone mr-2"></i>61 99367-6249
+                            </a>
+                            <a href="https://linkedin.com/in/luca-matheus-da-goncalves" target="_blank" rel="noreferrer" className="text-textMuted hover:text-primary transition-colors" aria-label="Perfil no LinkedIn">
+                                <i className="fa-brands fa-linkedin mr-2"></i>LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+
+        // --- COMPONENTE PRINCIPAL (APP) ---
+        const App = () => {
+            useEffect(() => {
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 50,
+                });
+            }, []);
+
+            return (
+                <div className="font-sans antialiased text-gray-100 min-h-screen flex flex-col">
+                    <Navbar />
+                    <main className="flex-grow">
+                        <Hero />
+                        <Skills />
+                        <Experience />
+                        <Projects />
+                        <Certifications />
+                        <Dashboard />
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
