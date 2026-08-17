@@ -117,7 +117,7 @@
 
         // --- COMPONENTE: HERO & FOTO ---
         const Hero = () => {
-            const [profileImage, setProfileImage] = useState("https://source.unsplash.com/random/400x400/?professional,portrait");
+            const [profileImage] = useState("./foto-perfil.jpg");
 
             const handleImageUpload = (event) => {
                 const file = event.target.files[0];
